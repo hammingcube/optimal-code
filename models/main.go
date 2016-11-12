@@ -2,7 +2,9 @@ package models
 
 import (
 	"fmt"
+	"github.com/labstack/echo"
 	"github.com/maddyonline/umpire"
+	"net/http"
 	"strconv"
 )
 
@@ -42,6 +44,20 @@ type Schema struct {
 	Solutions map[ProblemKey]*Solution
 	Users     map[UserKey]*User
 	//Submissions map[UserKey]map[SubmissionKey]*Submission
+}
+
+func PostProblemHandler(store ProblemStore) func(echo.Context) error {
+	return func(c echo.Context) error {
+		prob := &Problem{}
+		if err := c.Bind(prob); err != nil {
+			return err
+		}
+		err, stored := store.CreateProblem(prob.Id, prob)
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusCreated, stored)
+	}
 }
 
 type ProblemStore interface {
