@@ -44,16 +44,39 @@ type Schema struct {
 	//Submissions map[UserKey]map[SubmissionKey]*Submission
 }
 
-type Store interface {
+type ProblemStore interface {
 	CreateProblem(key ProblemKey, p *Problem) (error, *Problem)
-	CreateSolution(key ProblemKey, s *Solution) (error, *Solution)
-	CreateUser(key UserKey, u *User) (error, *User)
-	CreateSubmission(key UserKey, sub *Submission) (error, *Submission)
-
 	GetProblem(key ProblemKey) (error, *Problem)
+	//UpdateProblem(key ProblemKey, p *Problem) (error, *Problem)
+	//GetAllProblems() (error, []*Problem)
+}
+
+type SolutionStore interface {
+	CreateSolution(key ProblemKey, s *Solution) (error, *Solution)
 	GetSolution(key ProblemKey) (error, *Solution)
+	//UpdateSolution(key ProblemKey, s *Solution) (error, *Solution)
+	//GetAllSolutions() (error, []*Solution)
+}
+
+type UserStore interface {
+	CreateUser(key UserKey, u *User) (error, *User)
 	GetUser(key UserKey) (error, *User)
+	//UpdateUser(key UserKey, u *User) (error, *User)
+	//GetAllUsers() (error, []*User)
+}
+
+type SubmissionStore interface {
+	CreateSubmission(key UserKey, sub *Submission) (error, *Submission)
 	GetSubmission(key UserKey, subKey SubmissionKey) (error, *Submission)
+	//UpdateSubmission(key UserKey, sub *Submission) (error, *Submission)
+	//GetAllSubmissions(key UserKey) (error, []*Submission)
+}
+
+type Store interface {
+	ProblemStore
+	SolutionStore
+	UserStore
+	SubmissionStore
 }
 
 type InMemoryStore struct {
