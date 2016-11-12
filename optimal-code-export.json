@@ -1,0 +1,63 @@
+{
+  "company_tags" : {
+    "facebook" : {
+      "members" : {
+        "problem-1" : "True",
+        "problem-2" : "True"
+      },
+      "name" : "Facebook"
+    },
+    "microsoft" : {
+      "members" : {
+        "problem-1" : "True"
+      },
+      "name" : "Microsoft"
+    }
+  },
+  "problems" : {
+    "problem-1" : {
+      "company_tags" : {
+        "facebook" : "True",
+        "microsoft" : "True"
+      },
+      "id" : "problem-1",
+      "long_desc" : "The goal of this problem is to find out number of words in an input string",
+      "name" : "problem-1",
+      "short_desc" : "Find out number of words in an input string",
+      "templates" : {
+        "cpp" : "",
+        "python" : ""
+      },
+      "title" : "Count number of words"
+    }
+  },
+  "solutions" : {
+    "problem-1" : {
+      "files" : [ {
+        "content" : "",
+        "name" : "main.cpp"
+      }, {
+        "content" : "",
+        "name" : "main.h"
+      } ],
+      "language" : "cpp",
+      "stdin" : ""
+    }
+  },
+  "submissions" : {
+    "user-1" : [ {
+      "problem" : "problem-1",
+      "solution" : "",
+      "timestamp" : ""
+    }, {
+      "problem" : "problem-1",
+      "solution" : "",
+      "timestamp" : ""
+    } ]
+  },
+  "users" : {
+    "user-1" : {
+      "name" : ""
+    }
+  }
+}
