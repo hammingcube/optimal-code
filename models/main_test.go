@@ -22,7 +22,7 @@ func TestDecoding(t *testing.T) {
 	fmt.Printf("%s %#v\n", "Problems", v.Problems)
 	fmt.Printf("%s %#v\n", "Solutions", v.Solutions)
 	fmt.Printf("%s %#v\n", "Users", v.Users)
-	fmt.Printf("%s %#v\n", "Submissions", v.Submissions)
+	//fmt.Printf("%s %#v\n", "Submissions", v.Submissions)
 }
 
 func try_creating_users(store Store, user *User) error {
@@ -66,7 +66,7 @@ func TestStoreImpl(t *testing.T) {
 		Problems:    map[ProblemKey]*Problem{},
 		Solutions:   map[ProblemKey]*Solution{},
 		Users:       map[UserKey]*User{},
-		Submissions: map[UserKey][]*Submission{},
+		Submissions: map[UserKey]map[SubmissionKey]*Submission{},
 	}
 	prob := &Problem{
 		Id:    "abc",

@@ -3,10 +3,12 @@ package models
 import (
 	"fmt"
 	"github.com/maddyonline/umpire"
+	"strconv"
 )
 
 type UserKey string
 type ProblemKey string
+type SubmissionKey string
 
 type User struct {
 	Id   UserKey `json:"id"`
@@ -28,17 +30,18 @@ type Solution struct {
 }
 
 type Submission struct {
-	UserId    UserKey    `json:"user_id"`
-	ProblemId ProblemKey `json:"problem_id"`
-	Timestamp string     `json:"timestamp"`
-	Solution  *Solution  `json:"solution"`
+	Id        SubmissionKey `json:"id"`
+	UserId    UserKey       `json:"user_id"`
+	ProblemId ProblemKey    `json:"problem_id"`
+	Timestamp string        `json:"timestamp"`
+	Solution  *Solution     `json:"solution"`
 }
 
 type Schema struct {
-	Problems    map[ProblemKey]*Problem
-	Solutions   map[ProblemKey]*Solution
-	Users       map[UserKey]*User
-	Submissions map[UserKey][]*Submission
+	Problems  map[ProblemKey]*Problem
+	Solutions map[ProblemKey]*Solution
+	Users     map[UserKey]*User
+	//Submissions map[UserKey]map[SubmissionKey]*Submission
 }
 
 type Store interface {
@@ -46,13 +49,18 @@ type Store interface {
 	CreateSolution(key ProblemKey, s *Solution) (error, *Solution)
 	CreateUser(key UserKey, u *User) (error, *User)
 	CreateSubmission(key UserKey, sub *Submission) (error, *Submission)
+
+	GetProblem(key ProblemKey) (error, *Problem)
+	GetSolution(key ProblemKey) (error, *Solution)
+	GetUser(key UserKey) (error, *User)
+	GetSubmission(key UserKey, subKey SubmissionKey) (error, *Submission)
 }
 
 type InMemoryStore struct {
 	Problems    map[ProblemKey]*Problem
 	Solutions   map[ProblemKey]*Solution
 	Users       map[UserKey]*User
-	Submissions map[UserKey][]*Submission
+	Submissions map[UserKey]map[SubmissionKey]*Submission
 }
 
 func (store *InMemoryStore) CreateProblem(key ProblemKey, p *Problem) (error, *Problem) {
@@ -92,10 +100,44 @@ func (store *InMemoryStore) CreateSubmission(key UserKey, sub *Submission) (erro
 	if sub == nil {
 		return nil, nil
 	}
-	if arr, ok := store.Submissions[key]; ok {
-		arr = append(arr, sub)
+	if subMap, ok := store.Submissions[key]; ok {
+		newKey := SubmissionKey(strconv.Itoa(len(subMap) + 1))
+		store.Submissions[key][newKey] = sub
+		sub.Id = newKey
 	} else {
-		store.Submissions[key] = []*Submission{sub}
+		store.Submissions[key] = map[SubmissionKey]*Submission{SubmissionKey("0"): sub}
+		sub.Id = "0"
 	}
 	return nil, sub
+}
+
+func (store *InMemoryStore) GetProblem(key ProblemKey) (error, *Problem) {
+	if _, ok := store.Problems[key]; !ok {
+		return fmt.Errorf("Key does not exist"), nil
+	}
+	return nil, store.Problems[key]
+}
+
+func (store *InMemoryStore) GetSolution(key ProblemKey) (error, *Solution) {
+	if _, ok := store.Solutions[key]; !ok {
+		return fmt.Errorf("Key does not exist"), nil
+	}
+	return nil, store.Solutions[key]
+}
+
+func (store *InMemoryStore) GetUser(key UserKey) (error, *User) {
+	if _, ok := store.Users[key]; !ok {
+		return fmt.Errorf("Key does not exist"), nil
+	}
+	return nil, store.Users[key]
+}
+
+func (store *InMemoryStore) GetSubmission(key UserKey, subKey SubmissionKey) (error, *Submission) {
+	if _, ok := store.Submissions[key]; !ok {
+		return fmt.Errorf("Key does not exist"), nil
+	}
+	if _, ok := store.Submissions[key][subKey]; !ok {
+		return fmt.Errorf("Key does not exist"), nil
+	}
+	return nil, store.Submissions[key][subKey]
 }
