@@ -25,6 +25,15 @@ func TestDecoding(t *testing.T) {
 	fmt.Printf("%s %#v\n", "Submissions", v.Submissions)
 }
 
+func try_creating_users(store Store, user *User) error {
+	err, stored := store.CreateUser(user.Id, user)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Stored: %#v", stored)
+	return nil
+}
+
 func try_creating_problems(store Store, prob *Problem) error {
 	err, stored := store.CreateProblem(prob.Id, prob)
 	if err != nil {
@@ -43,10 +52,21 @@ func try_creating_solutions(store Store, soln *Solution) error {
 	return nil
 }
 
+func try_creating_submissions(store Store, sub *Submission) error {
+	err, stored := store.CreateSubmission(sub.UserId, sub)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Stored: %#v", stored)
+	return nil
+}
+
 func TestStoreImpl(t *testing.T) {
 	store := &InMemoryStore{
-		Problems:  map[ProblemKey]*Problem{},
-		Solutions: map[ProblemKey]*Solution{},
+		Problems:    map[ProblemKey]*Problem{},
+		Solutions:   map[ProblemKey]*Solution{},
+		Users:       map[UserKey]*User{},
+		Submissions: map[UserKey][]*Submission{},
 	}
 	prob := &Problem{
 		Id:    "abc",
@@ -63,6 +83,16 @@ func TestStoreImpl(t *testing.T) {
 			},
 		},
 	}
+	user := &User{"abc", "james"}
+
+	sub := &Submission{
+		UserId:    user.Id,
+		ProblemId: prob.Id,
+		Solution:  soln,
+	}
+
 	try_creating_problems(store, prob)
 	try_creating_solutions(store, soln)
+	try_creating_users(store, user)
+	try_creating_submissions(store, sub)
 }
