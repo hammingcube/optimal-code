@@ -47,11 +47,20 @@
   "submissions" : {
     "user-1" : [ {
       "problem" : "problem-1",
-      "solution" : "",
+      "solution" : {
+        "files" : [ {
+          "content" : "",
+          "name" : "main.cpp"
+        }, {
+          "content" : "",
+          "name" : "main.h"
+        } ],
+        "language" : "cpp",
+        "stdin" : ""
+      },
       "timestamp" : ""
     }, {
       "problem" : "problem-1",
-      "solution" : "",
       "timestamp" : ""
     } ]
   },
